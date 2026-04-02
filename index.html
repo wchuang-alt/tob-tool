@@ -144,6 +144,10 @@
     <div class="settings-panel">
       <h3>📧 通知設定（漫畫）</h3>
       <div class="setting-row">
+        <label>Sheet 網址</label>
+        <input type="text" id="manga-sheet-url" placeholder="貼上 Google Sheet 網址"/>
+      </div>
+      <div class="setting-row">
         <label>收件人信箱</label>
         <div style="flex:1">
           <div style="display:flex;gap:8px;">
@@ -182,6 +186,10 @@
   <div id="tab-novel" class="tab-content">
     <div class="settings-panel">
       <h3>📧 通知設定（小說）</h3>
+      <div class="setting-row">
+        <label>Sheet 網址</label>
+        <input type="text" id="novel-sheet-url" placeholder="貼上 Google Sheet 網址"/>
+      </div>
       <div class="setting-row">
         <label>收件人信箱</label>
         <div style="flex:1">
@@ -244,10 +252,11 @@
 
 <script>
 const CLIENT_ID = "929637642575-ej2th0o6r3r6sf9t6uedmrrnign77i2i.apps.googleusercontent.com";
-const SHEET_IDS = {
-  manga: "1Mu6EYvX-6pwEkzPRKRT0KUH6X3r9NwtS1U3pZEHUVQ8",
-  novel: "1OIPrEYMPXqBTRxGLRw0q338sWXjmJnHVLsqZQk5ZIMk"
-};
+function getSheetId(url) {
+  if (!url) return "";
+  const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : url.trim();
+}
 const FIELDS = ["狀態","平台ID","作品","作者","上架設定","下架設定"];
 const STATUS_INFO = {
   overdue:  {label:"已逾期", color:"#ff4444"},
@@ -261,8 +270,8 @@ let currentUser = null;
 let sheetData = { manga: [], novel: [] };
 let collapseState = { manga: {}, novel: {} };
 let settings = {
-  manga: { emails: [], subject: "", body: "" },
-  novel: { emails: [], subject: "", body: "" },
+  manga: { emails: [], subject: "", body: "", sheetUrl: "" },
+  novel: { emails: [], subject: "", body: "", sheetUrl: "" },
   whitelist: []
 };
 
@@ -278,6 +287,8 @@ function loadLocalSettings() {
   document.getElementById("manga-email-body").value = settings.manga.body || "";
   document.getElementById("novel-email-subject").value = settings.novel.subject || "";
   document.getElementById("novel-email-body").value = settings.novel.body || "";
+  document.getElementById("manga-sheet-url").value = settings.manga.sheetUrl || "";
+  document.getElementById("novel-sheet-url").value = settings.novel.sheetUrl || "";
   renderWhitelist();
 }
 
@@ -345,6 +356,7 @@ function switchMainTab(tab) {
 function saveSettings(type) {
   settings[type].subject = document.getElementById(`${type}-email-subject`).value;
   settings[type].body = document.getElementById(`${type}-email-body`).value;
+  settings[type].sheetUrl = document.getElementById(`${type}-sheet-url`).value.trim();
   saveLocalSettings();
   const badge = document.getElementById(`${type}-saved`);
   badge.style.display = "inline";
@@ -423,7 +435,8 @@ async function loadSheetData(type) {
   document.getElementById(`${type}-info`).textContent = "載入中…";
 
   try {
-    const id = SHEET_IDS[type];
+    const id = getSheetId(settings[type].sheetUrl);
+  if (!id) { listEl.innerHTML = "<div class=\'empty\'>⚠️ 請先在「管理設定」填入 Google Sheet 網址</div>"; document.getElementById(`${type}-info`).textContent = "未設定網址"; return; }
     const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
