@@ -6,7 +6,7 @@
   <title>toB 轉載作品下架提醒工具</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    /* 恢復你原有的所有樣式 */
+    /* 完全恢復你最原始的精美樣式 */
     *{box-sizing:border-box;margin:0;padding:0;}
     body{background:#f5f4f0;font-family:'微軟正黑體','Georgia',serif;color:#1a1a1a;min-height:100vh;}
     header{background:#1a1a2e;color:#fff;padding:20px 40px;border-bottom:4px solid #e8c84a;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
@@ -45,24 +45,30 @@
 
 <header>
   <div class="header-left"><span class="tag">MOJOIN</span><h1>toB 轉載作品下架提醒工具</h1></div>
-  <button id="google-btn">使用 Google 帳號登入</button>
+  <button id="google-btn" onclick="initGoogle()">使用 Google 帳號登入</button>
   <div id="user-info">
     <img id="user-avatar" src=""/><span id="user-name"></span><button id="btn-logout" onclick="location.reload()">登出</button>
   </div>
 </header>
 
+<div id="login-screen" style="padding: 100px 0; text-align: center;">
+  <div style="font-size: 50px; margin-bottom: 20px;">📋</div>
+  <h2>toB 轉載作品下架提醒工具</h2>
+  <p style="color: #888; margin-top: 10px;">請點擊右上方按鈕登入</p>
+</div>
+
 <div id="main-app">
   <div class="main-tabs">
-    <button class="main-tab active" onclick="switchMainTab('manga')">📚 漫畫_toB轉載作品下架提醒</button>
-    <button class="main-tab" onclick="switchMainTab('novel')">📖 小說_toB轉載作品下架提醒</button>
-    <button class="main-tab" onclick="switchMainTab('admin')">⚙️ 管理設定</button>
+    <button class="main-tab active" onclick="switchMainTab(event, 'manga')">📚 漫畫_toB轉載作品下架提醒</button>
+    <button class="main-tab" onclick="switchMainTab(event, 'novel')">📖 小說_toB轉載作品下架提醒</button>
+    <button class="main-tab" onclick="switchMainTab(event, 'admin')">⚙️ 管理設定</button>
   </div>
 
   <div id="tab-manga" class="tab-content active">
     <div class="data-header">
       <div class="info-bar" id="manga-info">尚未載入資料</div>
       <div style="display:flex;gap:10px;">
-        <input id="search-1" placeholder="🔍 搜尋作品..." oninput="renderData('manga')" style="padding:8px; border:1px solid #ddd; border-radius:4px;">
+        <input id="search-manga" placeholder="🔍 搜尋作品..." oninput="renderData('manga')" style="padding:8px; border:1px solid #ddd; border-radius:4px;">
         <button class="btn-load" onclick="loadSheetData('manga')">🔄 載入資料</button>
       </div>
     </div>
@@ -73,7 +79,7 @@
     <div class="data-header">
       <div class="info-bar" id="novel-info">尚未載入資料</div>
       <div style="display:flex;gap:10px;">
-        <input id="search-2" placeholder="🔍 搜尋作品..." oninput="renderData('novel')" style="padding:8px; border:1px solid #ddd; border-radius:4px;">
+        <input id="search-novel" placeholder="🔍 搜尋作品..." oninput="renderData('novel')" style="padding:8px; border:1px solid #ddd; border-radius:4px;">
         <button class="btn-load" onclick="loadSheetData('novel')">🔄 載入資料</button>
       </div>
     </div>
@@ -104,23 +110,56 @@ let accessToken = null;
 let sheetData = { manga: [], novel: [] };
 let config = { mangaUrl: "", novelUrl: "" };
 
+// 核心：初始化 Google 登入
+function initGoogle() {
+  if (typeof google === 'undefined') {
+    alert("Google 腳本還在載入中，請稍候再試");
+    return;
+  }
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: "https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
+    callback: handleToken,
+  });
+  client.requestAccessToken();
+}
+
+async function handleToken(resp) {
+  if (resp.error) {
+    console.error("Login Error:", resp.error);
+    return;
+  }
+  accessToken = resp.access_token;
+  
+  // 取得使用者資訊
+  fetch("https://www.googleapis.com/oauth2/v3/userinfo", { headers: { Authorization: `Bearer ${accessToken}` } })
+    .then(r => r.json()).then(user => {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('main-app').style.display = 'block';
+      document.getElementById('google-btn').style.display = 'none';
+      document.getElementById('user-info').style.display = 'flex';
+      document.getElementById('user-avatar').src = user.picture;
+      document.getElementById('user-name').innerText = user.name;
+    });
+}
+
 function getSheetId(url) {
   const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
   return m ? m[1] : url.trim();
 }
 
-function switchMainTab(tab) {
+function switchMainTab(evt, tab) {
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
   document.querySelectorAll(".main-tab").forEach(t => t.classList.remove("active"));
   document.getElementById("tab-" + tab).classList.add("active");
-  event.currentTarget.classList.add("active");
+  evt.currentTarget.classList.add("active");
 }
 
 function saveUrls() {
   config.mangaUrl = document.getElementById("manga-url-input").value;
   config.novelUrl = document.getElementById("novel-url-input").value;
   localStorage.setItem("toB_tool_config", JSON.stringify(config));
-  alert("網址已儲存！");
+  alert("設定已儲存！");
 }
 
 window.onload = () => {
@@ -130,24 +169,6 @@ window.onload = () => {
     document.getElementById("manga-url-input").value = config.mangaUrl || "";
     document.getElementById("novel-url-input").value = config.novelUrl || "";
   }
-};
-
-document.getElementById('google-btn').onclick = () => {
-  google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: "https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
-    callback: (resp) => {
-      accessToken = resp.access_token;
-      fetch("https://www.googleapis.com/oauth2/v3/userinfo", { headers: { Authorization: `Bearer ${accessToken}` } })
-        .then(r => r.json()).then(user => {
-          document.getElementById('google-btn').style.display = 'none';
-          document.getElementById('user-info').style.display = 'flex';
-          document.getElementById('user-avatar').src = user.picture;
-          document.getElementById('user-name').innerText = user.name;
-          document.getElementById('main-app').style.display = 'block';
-        });
-    }
-  }).requestAccessToken();
 };
 
 async function loadSheetData(type) {
@@ -188,12 +209,12 @@ async function loadSheetData(type) {
     sheetData[type].sort((a,b) => a.date - b.date);
     renderData(type);
     document.getElementById(type + "-info").innerText = `✅ 共 ${sheetData[type].length} 筆資料`;
-  } catch (e) { alert("載入失敗，請確認網址與授權"); }
+  } catch (e) { alert("載入失敗，請確認網址與授權（需勾選試算表權限）"); }
 }
 
 function renderData(type) {
   const container = document.getElementById(type + "-list");
-  const search = document.getElementById(type === "manga" ? "search-1" : "search-2").value.toLowerCase();
+  const search = document.getElementById("search-" + type).value.toLowerCase();
   container.innerHTML = "";
   
   const filtered = sheetData[type].filter(item => 
