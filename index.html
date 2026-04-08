@@ -6,81 +6,80 @@
   <title>toB 轉載作品下架提醒工具</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    /* 這裡保留你原始精美的 CSS 樣式 */
+    /* 這裡找回了你最原始、最漂亮的 CSS 樣式 */
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{background:#f5f4f0;font-family:'微軟正黑體',serif;color:#1a1a1a;min-height:100vh;}
-    header{background:#1a1a2e;color:#fff;padding:20px 40px;border-bottom:4px solid #e8c84a;display:flex;align-items:center;justify-content:space-between;}
-    .tag{font-size:11px;color:#e8c84a;font-family:monospace;letter-spacing:2px;}
-    #google-btn{background:#fff;padding:8px 16px;border-radius:4px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:8px;border:none;}
-    #user-info{display:none;align-items:center;gap:8px;}
-    #user-info img{width:28px;border-radius:50%;}
+    body{background:#f5f4f0;font-family:'微軟正黑體','Georgia',serif;color:#1a1a1a;min-height:100vh;}
+    header{background:#1a1a2e;color:#fff;padding:20px 40px;border-bottom:4px solid #e8c84a;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .header-left .tag{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#e8c84a;font-family:monospace;}
+    .header-left h1{font-size:22px;font-weight:700;display:inline;margin-left:10px;}
+    #google-btn{display:flex;align-items:center;gap:8px;background:#fff;color:#333;border:none;border-radius:4px;padding:8px 16px;font-size:13px;cursor:pointer;font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+    #user-info{display:none;align-items:center;gap:8px;font-size:13px;}
+    #user-info img{width:28px;height:28px;border-radius:50%;border:2px solid #e8c84a;}
     #main-app{display:none;}
     .main-tabs{display:flex;background:#1a1a2e;padding:0 40px;}
-    .main-tab{padding:14px 28px;cursor:pointer;color:#aaa;border:none;background:none;font-weight:600;border-bottom:3px solid transparent;}
+    .main-tab{padding:14px 28px;font-size:14px;cursor:pointer;background:none;border:none;color:#aaa;border-bottom:3px solid transparent;transition:all 0.15s;font-weight:600;}
     .main-tab.active{color:#e8c84a;border-bottom-color:#e8c84a;}
     .tab-content{display:none;max-width:1100px;margin:0 auto;padding:28px 20px;}
     .tab-content.active{display:block;}
     .settings-panel{background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:20px 24px;margin-bottom:24px;}
-    .setting-row{display:flex;gap:10px;margin-bottom:10px;align-items:center;}
-    .setting-row label{min-width:100px;font-size:13px;}
-    .setting-row input{flex:1;padding:8px;border:1px solid #ddd;border-radius:4px;}
-    .btn-save{background:#1a1a2e;color:#e8c84a;padding:8px 16px;border-radius:4px;cursor:pointer;border:none;}
-    .btn-load{background:#e8c84a;color:#1a1a2e;padding:8px 16px;border-radius:4px;cursor:pointer;border:none;font-weight:700;}
-    table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;margin-top:10px;}
-    th{background:#f0efe9;padding:10px;text-align:left;border-bottom:2px solid #ddd;}
-    td{padding:10px;border-bottom:1px solid #eee;}
+    .settings-panel h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #e8c84a;}
+    .setting-row{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+    .setting-row label{font-size:13px;color:#555;min-width:100px;}
+    .setting-row input{flex:1;border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-size:13px;}
+    .btn-save{background:#1a1a2e;color:#e8c84a;border:none;border-radius:4px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+    .btn-load{background:#e8c84a;color:#1a1a2e;border:none;border-radius:4px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+    .info-bar{background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:8px 14px;font-size:12px;color:#555;margin-bottom:10px;}
+    table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid #e0e0e0;}
+    thead tr{background:#f0efe9;}
+    th{padding:9px 12px;text-align:left;color:#666;font-weight:700;border-bottom:1px solid #e0e0e0;}
+    td{padding:9px 12px;border-bottom:1px solid #f0f0f0;}
     .status-overdue{color:#ff4444;font-weight:700;}
-    .status-soon{color:#f0b400;font-weight:700;}
   </style>
 </head>
 <body>
 
 <header>
-  <div><span class="tag">MOJOIN</span><h1 style="display:inline;margin-left:10px;font-size:22px;">toB 轉載作品下架提醒工具</h1></div>
-  <button id="google-btn">Google 帳號登入</button>
+  <div class="header-left"><span class="tag">MOJOIN</span><h1>toB 轉載作品下架提醒工具</h1></div>
+  <button id="google-btn">使用 Google 帳號登入</button>
   <div id="user-info">
-    <img id="user-avatar" src=""/><span id="user-name"></span><button onclick="location.reload()" style="margin-left:10px;padding:2px 8px;cursor:pointer;">登出</button>
+    <img id="user-avatar" src="" alt=""/>
+    <span id="user-name"></span>
+    <button onclick="location.reload()" style="background:none;border:1px solid #555;border-radius:4px;padding:3px 10px;font-size:11px;color:#aaa;cursor:pointer;margin-left:10px;">登出</button>
   </div>
 </header>
 
 <div id="main-app">
   <div class="main-tabs">
-    <button class="main-tab active" onclick="switchTab('manga')">📚 漫畫分頁</button>
-    <button class="main-tab" onclick="switchTab('novel')">📖 小說分頁</button>
-    <button class="main-tab" onclick="switchTab('admin')">⚙️ 管理設定</button>
+    <button class="main-tab active" onclick="switchTab(event, 'manga')">📚 漫畫分頁</button>
+    <button class="main-tab" onclick="switchTab(event, 'novel')">📖 小說分頁</button>
   </div>
 
   <div id="tab-manga" class="tab-content active">
     <div class="settings-panel">
-      <h3>漫畫資料設定</h3>
+      <h3>📧 漫畫 Sheet 設定</h3>
       <div class="setting-row">
         <label>Sheet 網址</label>
-        <input type="text" id="manga-url" placeholder="請貼上漫畫試算表網址">
+        <input type="text" id="manga-url" placeholder="貼上 Google Sheet 網址後點儲存">
+        <button class="btn-save" onclick="saveUrl('manga')">儲存</button>
       </div>
-      <button class="btn-save" onclick="saveUrl('manga')">💾 儲存網址</button>
     </div>
-    <button class="btn-load" onclick="loadSheetData('manga')">🔄 載入漫畫資料</button>
-    <div id="manga-list"></div>
+    <div class="info-bar" id="manga-info">請先載入資料</div>
+    <button class="btn-load" onclick="loadData('manga')">🔄 載入漫畫資料</button>
+    <div id="manga-list" style="margin-top:20px;"></div>
   </div>
 
   <div id="tab-novel" class="tab-content">
     <div class="settings-panel">
-      <h3>小說資料設定</h3>
+      <h3>📧 小說 Sheet 設定</h3>
       <div class="setting-row">
         <label>Sheet 網址</label>
-        <input type="text" id="novel-url" placeholder="請貼上小說試算表網址">
+        <input type="text" id="novel-url" placeholder="貼上 Google Sheet 網址後點儲存">
+        <button class="btn-save" onclick="saveUrl('novel')">儲存</button>
       </div>
-      <button class="btn-save" onclick="saveUrl('novel')">💾 儲存網址</button>
     </div>
-    <button class="btn-load" onclick="loadSheetData('novel')">🔄 載入小說資料</button>
-    <div id="novel-list"></div>
-  </div>
-
-  <div id="tab-admin" class="tab-content">
-    <div class="settings-panel">
-      <h3>🔐 工具權限說明</h3>
-      <p style="font-size:14px; color:#666;">請確保你的 Google 帳號擁有該試算表的「檢視」權限。第一次載入請務必勾選授權框。</p>
-    </div>
+    <div class="info-bar" id="novel-info">請先載入資料</div>
+    <button class="btn-load" onclick="loadData('novel')">🔄 載入小說資料</button>
+    <div id="novel-list" style="margin-top:20px;"></div>
   </div>
 </div>
 
@@ -88,34 +87,21 @@
 const CLIENT_ID = "929637642575-ej2th0o6r3r6sf9t6uedmrrnign77i2i.apps.googleusercontent.com";
 let accessToken = null;
 
-// 解析網址拿到 ID
-function getSheetId(url) {
-  const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-  return m ? m[1] : url.trim();
+// 1. 介面控制
+function switchTab(evt, tabName) {
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  document.querySelectorAll(".main-tab").forEach(t => t.classList.remove("active"));
+  document.getElementById("tab-" + tabName).classList.add("active");
+  evt.currentTarget.classList.add("active");
 }
 
-// 切換分頁
-function switchTab(tab) {
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-
-// 儲存網址到瀏覽器
 function saveUrl(type) {
-  const url = document.getElementById(type + '-url').value;
-  localStorage.setItem('toB_' + type + '_url', url);
-  alert('網址已儲存！');
+  const url = document.getElementById(type + "-url").value;
+  localStorage.setItem("toB_url_" + type, url);
+  alert("網址已儲存！");
 }
 
-// 載入儲存的網址
-window.onload = () => {
-  document.getElementById('manga-url').value = localStorage.getItem('toB_manga_url') || '';
-  document.getElementById('novel-url').value = localStorage.getItem('toB_novel_url') || '';
-};
-
-// Google 登入
+// 2. 登入邏輯
 document.getElementById('google-btn').onclick = () => {
   google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
@@ -130,70 +116,81 @@ document.getElementById('google-btn').onclick = () => {
           document.getElementById('user-name').innerText = user.name;
           document.getElementById('user-avatar').src = user.picture;
           document.getElementById('main-app').style.display = 'block';
+          // 載入存過的網址
+          document.getElementById('manga-url').value = localStorage.getItem("toB_url_manga") || "";
+          document.getElementById('novel-url').value = localStorage.getItem("toB_url_novel") || "";
         });
     }
   }).requestAccessToken();
 };
 
-// 核心載入邏輯：自動解析所有分頁並尋找「下架設定」
-async function loadSheetData(type) {
-  const url = localStorage.getItem('toB_' + type + '_url');
-  const id = getSheetId(url);
-  if (!id) return alert('請先貼上正確的網址並儲存');
-
-  const listEl = document.getElementById(type + '-list');
-  listEl.innerHTML = "⏳ 載入中...";
+// 3. 資料讀取邏輯
+async function loadData(type) {
+  const url = localStorage.getItem("toB_url_" + type);
+  if (!url) return alert("請先輸入網址並點擊儲存！");
+  
+  const sheetId = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/)?.[1] || url;
+  const infoEl = document.getElementById(type + "-info");
+  const listEl = document.getElementById(type + "-list");
+  
+  infoEl.innerText = "⏳ 載入中...";
+  listEl.innerHTML = "";
 
   try {
-    const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}`, {
+    // 先抓這份試算表有哪些分頁名稱
+    const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     const meta = await metaRes.json();
     const sheetNames = meta.sheets.map(s => s.properties.title);
 
-    let allRows = [];
+    let combinedRows = [];
     for (const name of sheetNames) {
-      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${encodeURIComponent(name)}!A1:Z100`, {
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(name)}!A1:Z200`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       const data = await res.json();
-      if (data.values && data.values.length > 1) {
-        // 第一個分頁保留標題，後續只拿資料
-        if (allRows.length === 0) allRows.push(data.values[0]);
+      if (data.values && data.values.length > 0) {
+        if (combinedRows.length === 0) {
+          // 加上「分頁」標題
+          const header = ["來源分頁", ...data.values[0]];
+          combinedRows.push(header);
+        }
         data.values.slice(1).forEach(row => {
-          row.unshift(name); // 增加一欄顯示它是哪個分頁
-          allRows.push(row);
+          combinedRows.push([name, ...row]);
         });
       }
     }
-    renderTable(type, allRows);
-  } catch (e) {
-    alert('讀取失敗，請確認網址正確且已勾選授權');
+    renderTable(type, combinedRows);
+    infoEl.innerText = "✅ 載入完成，共 " + (combinedRows.length - 1) + " 筆資料";
+  } catch (err) {
+    infoEl.innerText = "❌ 載入失敗，請確認網址正確且已勾選授權框";
+    console.error(err);
   }
 }
 
 function renderTable(type, rows) {
-  const container = document.getElementById(type + '-list');
+  const container = document.getElementById(type + "-list");
   if (rows.length < 2) return container.innerHTML = "無資料";
-
-  let html = `<table><thead><tr><th>來源分頁</th>`;
-  rows[0].forEach(h => html += `<th>${h}</th>`);
-  html += `</tr></thead><tbody>`;
-
+  
+  let html = "<table><thead><tr>";
+  // 顯示前 7 欄（分頁 + 原本的 6 欄）
+  rows[0].slice(0, 7).forEach(h => html += `<th>${h}</th>`);
+  html += "</tr></thead><tbody>";
+  
   rows.slice(1).forEach(row => {
-    html += `<tr>`;
-    row.forEach((cell, idx) => {
-      let style = "";
-      // 簡單的到期判斷（假設下架設定在第6欄左右）
-      if (cell && cell.includes('20')) {
-        const d = new Date(cell);
-        if (!isNaN(d) && d < new Date()) style = 'class="status-overdue"';
+    html += "<tr>";
+    row.slice(0, 7).forEach((cell, idx) => {
+      let cls = "";
+      // 簡單判斷下架日期（假設在第 7 欄，索引 6）
+      if (idx === 6 && cell && cell.includes('20')) {
+        if (new Date(cell) < new Date()) cls = 'class="status-overdue"';
       }
-      html += `<td ${style}>${cell || '-'}</td>`;
+      html += `<td ${cls}>${cell || '-'}</td>`;
     });
-    html += `</tr>`;
+    html += "</tr>";
   });
-  html += `</tbody></table>`;
+  html += "</tbody></table>";
   container.innerHTML = html;
 }
 </script>
