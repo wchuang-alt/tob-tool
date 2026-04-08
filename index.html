@@ -6,18 +6,16 @@
   <title>toB 轉載作品下架提醒工具</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    /* 完全恢復你最原始的精美樣式 */
+    /* 恢復你原有的所有樣式 */
     *{box-sizing:border-box;margin:0;padding:0;}
     body{background:#f5f4f0;font-family:'微軟正黑體','Georgia',serif;color:#1a1a1a;min-height:100vh;}
     header{background:#1a1a2e;color:#fff;padding:20px 40px;border-bottom:4px solid #e8c84a;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
     .header-left .tag{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#e8c84a;font-family:monospace;}
     .header-left h1{font-size:22px;font-weight:700;display:inline;margin-left:10px;}
     #google-btn{display:flex;align-items:center;gap:8px;background:#fff;color:#333;border:none;border-radius:4px;padding:8px 16px;font-size:13px;cursor:pointer;font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
-    #google-btn svg{width:18px;height:18px;}
     #user-info{display:none;align-items:center;gap:8px;font-size:13px;color:#ccc;}
     #user-info img{width:28px;height:28px;border-radius:50%;border:2px solid #e8c84a;}
     #btn-logout{background:none;border:1px solid #555;border-radius:4px;padding:3px 10px;font-size:11px;color:#aaa;cursor:pointer;font-family:inherit;}
-    #login-screen{max-width:480px;margin:80px auto;text-align:center;background:#fff;border-radius:8px;padding:48px 40px;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
     #main-app{display:none;}
     .main-tabs{display:flex;background:#1a1a2e;padding:0 40px;}
     .main-tab{padding:14px 28px;font-size:14px;cursor:pointer;background:none;border:none;color:#aaa;border-bottom:3px solid transparent;transition:all 0.15s;font-weight:600;}
@@ -35,11 +33,12 @@
     .info-bar{background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:8px 14px;font-size:12px;color:#555;font-family:monospace;}
     .month-group-header{background:#1a1a2e;color:#e8c84a;padding:12px 20px;margin:24px 0 0 0;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center;font-weight:800;cursor:pointer;}
     .month-group-header.expired{background:#888;}
+    .count-badge{background:#e8c84a;color:#1a1a2e;padding:2px 12px;border-radius:20px;font-size:13px;}
     .month-table-wrap{border:1px solid #e0e0e0;border-top:none;border-radius:0 0 6px 6px;overflow-x:auto;}
-    table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;}
-    th{padding:9px 12px;text-align:left;background:#f0efe9;border-bottom:1px solid #e0e0e0;}
-    td{padding:9px 12px;border-bottom:1px solid #f0f0f0;}
-    .hidden{display:none;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{padding:9px 12px;text-align:left;background:#f0efe9;color:#666;font-weight:700;border-bottom:1px solid #e0e0e0;}
+    td{padding:9px 12px;border-bottom:1px solid #f0f0f0;background:#fff;}
+    .status-cell{font-weight:700;}
   </style>
 </head>
 <body>
@@ -48,29 +47,23 @@
   <div class="header-left"><span class="tag">MOJOIN</span><h1>toB 轉載作品下架提醒工具</h1></div>
   <button id="google-btn">使用 Google 帳號登入</button>
   <div id="user-info">
-    <img id="user-avatar" src=""/><span id="user-name"></span><button id="btn-logout">登出</button>
+    <img id="user-avatar" src=""/><span id="user-name"></span><button id="btn-logout" onclick="location.reload()">登出</button>
   </div>
 </header>
 
-<div id="login-screen" class="tab-content active" style="display:block;">
-  <div class="icon" style="font-size:50px; text-align:center;">📋</div>
-  <h2 style="text-align:center;">toB 轉載作品下架提醒工具</h2>
-  <p style="text-align:center; color:#888;">請點擊上方按鈕登入以繼續</p>
-</div>
-
 <div id="main-app">
   <div class="main-tabs">
-    <button class="main-tab active" onclick="switchTab(event, 'manga')">📚 漫畫分頁</button>
-    <button class="main-tab" onclick="switchTab(event, 'novel')">📖 小說分頁</button>
-    <button class="main-tab" onclick="switchTab(event, 'admin')">⚙️ 管理設定</button>
+    <button class="main-tab active" onclick="switchMainTab('manga')">📚 漫畫_toB轉載作品下架提醒</button>
+    <button class="main-tab" onclick="switchMainTab('novel')">📖 小說_toB轉載作品下架提醒</button>
+    <button class="main-tab" onclick="switchMainTab('admin')">⚙️ 管理設定</button>
   </div>
 
   <div id="tab-manga" class="tab-content active">
     <div class="data-header">
       <div class="info-bar" id="manga-info">尚未載入資料</div>
-      <div style="display:flex; gap:10px;">
-        <input id="search-manga" placeholder="🔍 搜尋作品..." oninput="renderData('manga')" style="padding:8px; border-radius:4px; border:1px solid #ddd;">
-        <button class="btn-load" onclick="loadSheetData('manga')">🔄 載入漫畫</button>
+      <div style="display:flex;gap:10px;">
+        <input id="search-1" placeholder="🔍 搜尋作品..." oninput="renderData('manga')" style="padding:8px; border:1px solid #ddd; border-radius:4px;">
+        <button class="btn-load" onclick="loadSheetData('manga')">🔄 載入資料</button>
       </div>
     </div>
     <div id="manga-list"></div>
@@ -79,9 +72,9 @@
   <div id="tab-novel" class="tab-content">
     <div class="data-header">
       <div class="info-bar" id="novel-info">尚未載入資料</div>
-      <div style="display:flex; gap:10px;">
-        <input id="search-novel" placeholder="🔍 搜尋作品..." oninput="renderData('novel')" style="padding:8px; border-radius:4px; border:1px solid #ddd;">
-        <button class="btn-load" onclick="loadSheetData('novel')">🔄 載入小說</button>
+      <div style="display:flex;gap:10px;">
+        <input id="search-2" placeholder="🔍 搜尋作品..." oninput="renderData('novel')" style="padding:8px; border:1px solid #ddd; border-radius:4px;">
+        <button class="btn-load" onclick="loadSheetData('novel')">🔄 載入資料</button>
       </div>
     </div>
     <div id="novel-list"></div>
@@ -89,42 +82,157 @@
 
   <div id="tab-admin" class="tab-content">
     <div class="settings-panel">
-      <h3>🔐 網址與白名單設定</h3>
+      <h3>⚙️ 試算表網址設定</h3>
       <div class="setting-row"><label>漫畫 Sheet 網址</label><input type="text" id="manga-url-input"></div>
       <div class="setting-row"><label>小說 Sheet 網址</label><input type="text" id="novel-url-input"></div>
-      <button class="btn-save" onclick="saveAdminSettings()">💾 儲存設定</button>
+      <button class="btn-save" onclick="saveUrls()">💾 儲存設定</button>
     </div>
   </div>
 </div>
 
 <script>
 const CLIENT_ID = "929637642575-ej2th0o6r3r6sf9t6uedmrrnign77i2i.apps.googleusercontent.com";
-const FIELDS = ["狀態","平台ID","作品","作者","下架設定"];
+const FIELDS = ["狀態","平台ID","作品","作者","上架設定","下架設定"];
+const STATUS_INFO = {
+  overdue:  {label:"已逾期", color:"#ff4444"},
+  today:    {label:"今天",   color:"#ff8800"},
+  soon:     {label:"即將到期",color:"#f0b400"},
+  upcoming: {label:"尚早",   color:"#22aa77"},
+};
+
 let accessToken = null;
 let sheetData = { manga: [], novel: [] };
-let settings = { mangaUrl: "", novelUrl: "" };
+let config = { mangaUrl: "", novelUrl: "" };
 
-function switchTab(evt, tabName) {
-  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-  document.querySelectorAll(".main-tab").forEach(t => t.classList.remove("active"));
-  document.getElementById("tab-" + tabName).classList.add("active");
-  evt.currentTarget.classList.add("active");
+function getSheetId(url) {
+  const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : url.trim();
 }
 
-function saveAdminSettings() {
-  settings.mangaUrl = document.getElementById("manga-url-input").value;
-  settings.novelUrl = document.getElementById("novel-url-input").value;
-  localStorage.setItem("toB_settings_v2", JSON.stringify(settings));
-  alert("設定已儲存！");
+function switchMainTab(tab) {
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  document.querySelectorAll(".main-tab").forEach(t => t.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+  event.currentTarget.classList.add("active");
+}
+
+function saveUrls() {
+  config.mangaUrl = document.getElementById("manga-url-input").value;
+  config.novelUrl = document.getElementById("novel-url-input").value;
+  localStorage.setItem("toB_tool_config", JSON.stringify(config));
+  alert("網址已儲存！");
 }
 
 window.onload = () => {
-  const saved = localStorage.getItem("toB_settings_v2");
+  const saved = localStorage.getItem("toB_tool_config");
   if (saved) {
-    settings = JSON.parse(saved);
-    document.getElementById("manga-url-input").value = settings.mangaUrl || "";
-    document.getElementById("novel-url-input").value = settings.novelUrl || "";
+    config = JSON.parse(saved);
+    document.getElementById("manga-url-input").value = config.mangaUrl || "";
+    document.getElementById("novel-url-input").value = config.novelUrl || "";
   }
 };
 
-document.getElementById
+document.getElementById('google-btn').onclick = () => {
+  google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: "https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
+    callback: (resp) => {
+      accessToken = resp.access_token;
+      fetch("https://www.googleapis.com/oauth2/v3/userinfo", { headers: { Authorization: `Bearer ${accessToken}` } })
+        .then(r => r.json()).then(user => {
+          document.getElementById('google-btn').style.display = 'none';
+          document.getElementById('user-info').style.display = 'flex';
+          document.getElementById('user-avatar').src = user.picture;
+          document.getElementById('user-name').innerText = user.name;
+          document.getElementById('main-app').style.display = 'block';
+        });
+    }
+  }).requestAccessToken();
+};
+
+async function loadSheetData(type) {
+  const url = config[type + "Url"];
+  const id = getSheetId(url);
+  if (!id) return alert("請先在管理設定填寫網址！");
+
+  document.getElementById(type + "-info").innerText = "⏳ 載入中...";
+  try {
+    const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const meta = await metaRes.json();
+    const sheetNames = meta.sheets.map(s => s.properties.title);
+    
+    sheetData[type] = [];
+    for (const name of sheetNames) {
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${encodeURIComponent(name)}!A1:Z500`, { headers: { Authorization: `Bearer ${accessToken}` } });
+      const data = await res.json();
+      if (!data.values || data.values.length < 2) continue;
+      
+      const headers = data.values[0];
+      const dateIdx = headers.indexOf("下架設定");
+      if (dateIdx === -1) continue;
+
+      data.values.slice(1).forEach(row => {
+        if (!row[dateIdx]) return;
+        const d = new Date(row[dateIdx]);
+        const diff = Math.round((d.setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / 86400000);
+        const status = diff < 0 ? "overdue" : diff === 0 ? "today" : diff <= 7 ? "soon" : "upcoming";
+        
+        const fields = {};
+        FIELDS.forEach(f => {
+          const idx = headers.indexOf(f);
+          fields[f] = idx !== -1 ? row[idx] : "-";
+        });
+        sheetData[type].push({ sheet: name, date: d, status, fields });
+      });
+    }
+    sheetData[type].sort((a,b) => a.date - b.date);
+    renderData(type);
+    document.getElementById(type + "-info").innerText = `✅ 共 ${sheetData[type].length} 筆資料`;
+  } catch (e) { alert("載入失敗，請確認網址與授權"); }
+}
+
+function renderData(type) {
+  const container = document.getElementById(type + "-list");
+  const search = document.getElementById(type === "manga" ? "search-1" : "search-2").value.toLowerCase();
+  container.innerHTML = "";
+  
+  const filtered = sheetData[type].filter(item => 
+    Object.values(item.fields).some(v => String(v).toLowerCase().includes(search)) || item.sheet.toLowerCase().includes(search)
+  );
+
+  const groups = {};
+  filtered.forEach(item => {
+    const month = `${item.date.getFullYear()}年${String(item.date.getMonth()+1).padStart(2,"0")}月`;
+    if (!groups[month]) groups[month] = [];
+    groups[month].push(item);
+  });
+
+  Object.keys(groups).sort().forEach(month => {
+    const isExpired = groups[month].every(i => i.status === "overdue");
+    const header = document.createElement("div");
+    header.className = "month-group-header" + (isExpired ? " expired" : "");
+    header.innerHTML = `<span>📅 ${month}${isExpired ? " (已逾期)" : ""}</span><span class="count-badge">共 ${groups[month].length} 筆</span>`;
+    container.appendChild(header);
+
+    const wrap = document.createElement("div");
+    wrap.className = "month-table-wrap";
+    let html = `<table><thead><tr><th>分頁</th>`;
+    FIELDS.forEach(f => html += `<th>${f}</th>`);
+    html += `</tr></thead><tbody>`;
+    
+    groups[month].forEach(item => {
+      const info = STATUS_INFO[item.status];
+      html += `<tr><td>${item.sheet}</td>`;
+      FIELDS.forEach(f => {
+        if (f === "狀態") html += `<td class="status-cell" style="color:${info.color}">${item.fields[f] !== "-" ? item.fields[f] : info.label}</td>`;
+        else html += `<td>${item.fields[f]}</td>`;
+      });
+      html += `</tr>`;
+    });
+    wrap.innerHTML = html + `</tbody></table>`;
+    container.appendChild(wrap);
+  });
+}
+</script>
+</body>
+</html>
