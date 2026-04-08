@@ -8,8 +8,6 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     body{background:#f5f4f0;font-family:'微軟正黑體','Georgia',serif;color:#1a1a1a;min-height:100vh;}
-
-    /* HEADER */
     header{background:#1a1a2e;color:#fff;padding:20px 40px;border-bottom:4px solid #e8c84a;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
     .header-left .tag{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#e8c84a;font-family:monospace;}
     .header-left h1{font-size:22px;font-weight:700;display:inline;margin-left:10px;}
@@ -18,285 +16,104 @@
     #user-info{display:none;align-items:center;gap:8px;font-size:13px;color:#ccc;}
     #user-info img{width:28px;height:28px;border-radius:50%;border:2px solid #e8c84a;}
     #btn-logout{background:none;border:1px solid #555;border-radius:4px;padding:3px 10px;font-size:11px;color:#aaa;cursor:pointer;font-family:inherit;}
-
-    /* LOGIN SCREEN */
     #login-screen{max-width:480px;margin:80px auto;text-align:center;background:#fff;border-radius:8px;padding:48px 40px;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
-    #login-screen .icon{font-size:52px;margin-bottom:16px;}
-    #login-screen h2{font-size:20px;margin-bottom:8px;}
-    #login-screen p{font-size:13px;color:#888;margin-bottom:28px;}
-    #login-screen #google-btn{margin:0 auto;justify-content:center;}
+    .icon{font-size:52px;margin-bottom:16px;}
     #access-denied{display:none;max-width:480px;margin:80px auto;text-align:center;background:#fff0f0;border:2px solid #ff4444;border-radius:8px;padding:48px 40px;}
-    #access-denied h2{color:#ff4444;margin-bottom:8px;}
-    #access-denied p{font-size:13px;color:#888;margin-bottom:20px;}
-
-    /* MAIN TABS */
     #main-app{display:none;}
     .main-tabs{display:flex;background:#1a1a2e;padding:0 40px;}
     .main-tab{padding:14px 28px;font-size:14px;font-family:inherit;cursor:pointer;background:none;border:none;color:#aaa;border-bottom:3px solid transparent;transition:all 0.15s;font-weight:600;}
     .main-tab.active{color:#e8c84a;border-bottom-color:#e8c84a;}
-
-    /* CONTENT */
     .tab-content{display:none;max-width:1100px;margin:0 auto;padding:28px 20px;}
     .tab-content.active{display:block;}
-
-    /* SETTINGS PANEL */
     .settings-panel{background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:20px 24px;margin-bottom:24px;}
-    .settings-panel h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #e8c84a;}
     .setting-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;}
     .setting-row label{font-size:13px;color:#555;min-width:100px;padding-top:9px;}
-    .setting-row input,.setting-row textarea{flex:1;min-width:200px;border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;}
-    .setting-row input:focus,.setting-row textarea:focus{border-color:#e8c84a;}
-    .setting-row textarea{min-height:80px;resize:vertical;}
-    .btn-save{background:#1a1a2e;color:#e8c84a;border:none;border-radius:4px;padding:8px 18px;font-size:13px;font-family:inherit;font-weight:700;cursor:pointer;}
-    .btn-save:hover{background:#2a2a4e;}
-    .btn-load{background:#e8c84a;color:#1a1a2e;border:none;border-radius:4px;padding:8px 18px;font-size:13px;font-family:inherit;font-weight:700;cursor:pointer;}
-    .btn-load:hover{background:#d4b43a;}
-    .saved-badge{font-size:12px;color:#22aa77;margin-left:8px;display:none;}
-
-    /* EMAIL LIST */
+    .setting-row input, .setting-row textarea{flex:1;min-width:200px;border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-size:13px;}
+    .btn-save, .btn-load{border:none;border-radius:4px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+    .btn-save{background:#1a1a2e;color:#e8c84a;}
+    .btn-load{background:#e8c84a;color:#1a1a2e;}
     .email-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
-    .email-tag{background:#f0efe9;border:1px solid #ddd;border-radius:20px;padding:4px 12px;font-size:12px;display:flex;align-items:center;gap:6px;}
-    .email-tag .remove{cursor:pointer;color:#aaa;font-size:14px;line-height:1;}
-    .email-tag .remove:hover{color:#ff4444;}
-
-    /* DATA AREA */
+    .email-tag{background:#f0efe9;border:1px solid #ddd;border-radius:20px;padding:4px 12px;font-size:12px;}
     .data-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
-    .info-bar{background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:8px 14px;font-size:12px;color:#555;font-family:monospace;}
-    #search-1,#search-2{padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-family:inherit;outline:none;width:260px;}
-
-    /* MONTH GROUPS */
-    .month-group-header{background:#1a1a2e;color:#e8c84a;padding:12px 20px;margin:24px 0 0 0;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center;font-weight:800;cursor:pointer;user-select:none;}
-    .month-group-header.expired{background:#888;}
-    .month-group-header .left{display:flex;align-items:center;gap:10px;}
-    .month-group-header .arrow{font-size:12px;transition:transform 0.2s;}
-    .month-group-header.collapsed .arrow{transform:rotate(-90deg);}
-    .count-badge{background:#e8c84a;color:#1a1a2e;padding:2px 12px;border-radius:20px;font-size:13px;font-family:monospace;}
-    .month-group-header.expired .count-badge{background:#ccc;color:#555;}
+    .info-bar{background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:8px 14px;font-size:12px;}
+    .month-group-header{background:#1a1a2e;color:#e8c84a;padding:12px 20px;margin-top:24px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;cursor:pointer;}
     .month-table-wrap{border:1px solid #e0e0e0;border-top:none;border-radius:0 0 6px 6px;overflow-x:auto;}
-    .month-table-wrap.hidden{display:none;}
-    table{width:100%;border-collapse:collapse;font-size:13px;}
-    thead tr{background:#f0efe9;}
-    thead th{padding:9px 12px;text-align:left;font-size:12px;color:#666;font-weight:700;border-bottom:1px solid #e0e0e0;white-space:nowrap;}
-    tbody tr{border-bottom:1px solid #f0f0f0;background:#fff;}
-    tbody tr:last-child{border-bottom:none;}
-    tbody tr:hover{background:#fafaf5;}
-    td{padding:9px 12px;vertical-align:middle;}
-    td.status-cell{font-weight:700;font-size:12px;white-space:nowrap;}
-    td.date-cell{font-family:monospace;font-size:12px;white-space:nowrap;}
-    .toggle-expired-wrap{display:flex;align-items:center;gap:8px;font-size:13px;color:#555;cursor:pointer;background:#fff;border:1px solid #ddd;border-radius:4px;padding:7px 14px;}
-    .toggle-expired-wrap input{cursor:pointer;width:15px;height:15px;accent-color:#1a1a2e;}
-    .empty{text-align:center;padding:40px;color:#aaa;background:#fff;border-radius:4px;border:1px solid #eee;margin-top:16px;}
-    .status-loading{text-align:center;padding:30px;color:#aaa;font-size:13px;}
-
-    /* ADMIN TAB */
-    .whitelist-item{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#fff;border:1px solid #eee;border-radius:4px;margin-bottom:6px;font-size:13px;}
-    .whitelist-item .remove-wl{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;}
-    .whitelist-item .remove-wl:hover{color:#ff4444;}
+    table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;}
+    th{background:#f0efe9;padding:9px 12px;text-align:left;border-bottom:1px solid #e0e0e0;}
+    td{padding:9px 12px;border-bottom:1px solid #f0f0f0;}
+    .hidden{display:none;}
   </style>
 </head>
 <body>
 
 <header>
-  <div class="header-left">
-    <span class="tag">MOJOIN</span><h1>toB 轉載作品下架提醒工具</h1>
-  </div>
+  <div class="header-left"><span class="tag">MOJOIN</span><h1>toB 轉載作品下架提醒工具</h1></div>
   <div style="display:flex;align-items:center;gap:12px;">
-    <button id="google-btn">
-      <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-      使用 Google 帳號登入
-    </button>
+    <button id="google-btn">使用 Google 登入</button>
     <div id="user-info">
-      <img id="user-avatar" src="" alt=""/>
-      <span id="user-name"></span>
-      <button id="btn-logout">登出</button>
+      <img id="user-avatar" src=""/><span id="user-name"></span><button id="btn-logout">登出</button>
     </div>
   </div>
 </header>
 
-<!-- 登入畫面 -->
 <div id="login-screen">
   <div class="icon">📋</div>
   <h2>toB 轉載作品下架提醒工具</h2>
   <p>請使用授權的 Google 帳號登入</p>
-  <button id="google-btn-2">
-    <svg viewBox="0 0 48 48" style="width:18px;height:18px;"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-    使用 Google 帳號登入
-  </button>
+  <button id="google-btn-2" style="padding:10px 20px; cursor:pointer;">Google 登入</button>
 </div>
 
-<!-- 無權限畫面 -->
 <div id="access-denied">
   <h2>⛔ 無使用權限</h2>
-  <p>你的帳號不在授權名單內，請聯絡管理員。</p>
-  <button id="btn-logout-denied" style="background:#1a1a2e;color:#fff;border:none;border-radius:4px;padding:8px 18px;cursor:pointer;font-family:inherit;">登出</button>
+  <p>你的帳號不在授權名單內。</p>
+  <button id="btn-logout-denied">登出</button>
 </div>
 
-<!-- 主介面 -->
 <div id="main-app">
   <div class="main-tabs">
-    <button class="main-tab active" onclick="switchMainTab('manga')">📚 漫畫_toB轉載作品下架提醒</button>
-    <button class="main-tab" onclick="switchMainTab('novel')">📖 小說_toB轉載作品下架提醒</button>
-    <button class="main-tab" onclick="switchMainTab('admin')">⚙️ 管理設定</button>
+    <button class="main-tab active" onclick="switchMainTab('manga')">📚 漫畫</button>
+    <button class="main-tab" onclick="switchMainTab('novel')">📖 小說</button>
+    <button class="main-tab" onclick="switchMainTab('admin')">⚙️ 管理</button>
   </div>
 
-  <!-- 漫畫分頁 -->
   <div id="tab-manga" class="tab-content active">
-    <div class="settings-panel">
-      <h3>📧 通知設定（漫畫）</h3>
-      <div class="setting-row">
-        <label>Sheet 網址</label>
-        <input type="text" id="manga-sheet-url" placeholder="貼上 Google Sheet 網址"/>
-      </div>
-      <div class="setting-row">
-        <label>收件人信箱</label>
-        <div style="flex:1">
-          <div style="display:flex;gap:8px;">
-            <input type="email" id="manga-email-input" placeholder="輸入信箱後按 Enter 新增"/>
-            <button class="btn-save" onclick="addEmail('manga')">新增</button>
-          </div>
-          <div class="email-tags" id="manga-email-tags"></div>
-        </div>
-      </div>
-      <div class="setting-row">
-        <label>信件標題</label>
-        <input type="text" id="manga-email-subject" placeholder="例：【MOJOIN】漫畫 toB轉載作品下架通知"/>
-      </div>
-      <div class="setting-row">
-        <label>信件前言</label>
-        <textarea id="manga-email-body" placeholder="輸入信件前言內容…"></textarea>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
-        <button class="btn-save" onclick="saveSettings('manga')">💾 儲存設定</button>
-        <span class="saved-badge" id="manga-saved">✅ 已儲存</span>
-      </div>
-    </div>
-
     <div class="data-header">
       <div class="info-bar" id="manga-info">尚未載入資料</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <label class="toggle-expired-wrap"><input type="checkbox" id="manga-show-expired" onchange="renderData('manga')"/> 顯示已逾期月份</label>
-        <input id="search-1" placeholder="🔍 搜尋作品、作者…" oninput="renderData('manga')"/>
-        <button class="btn-load" onclick="loadSheetData('manga')">🔄 載入資料</button>
-      </div>
+      <button class="btn-load" onclick="loadAllData()">🔄 載入兩份試算表資料</button>
     </div>
     <div id="manga-list"></div>
   </div>
 
-  <!-- 小說分頁 -->
   <div id="tab-novel" class="tab-content">
-    <div class="settings-panel">
-      <h3>📧 通知設定（小說）</h3>
-      <div class="setting-row">
-        <label>Sheet 網址</label>
-        <input type="text" id="novel-sheet-url" placeholder="貼上 Google Sheet 網址"/>
-      </div>
-      <div class="setting-row">
-        <label>收件人信箱</label>
-        <div style="flex:1">
-          <div style="display:flex;gap:8px;">
-            <input type="email" id="novel-email-input" placeholder="輸入信箱後按 Enter 新增"/>
-            <button class="btn-save" onclick="addEmail('novel')">新增</button>
-          </div>
-          <div class="email-tags" id="novel-email-tags"></div>
-        </div>
-      </div>
-      <div class="setting-row">
-        <label>信件標題</label>
-        <input type="text" id="novel-email-subject" placeholder="例：【MOJOIN】小說 toB轉載作品下架通知"/>
-      </div>
-      <div class="setting-row">
-        <label>信件前言</label>
-        <textarea id="novel-email-body" placeholder="輸入信件前言內容…"></textarea>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
-        <button class="btn-save" onclick="saveSettings('novel')">💾 儲存設定</button>
-        <span class="saved-badge" id="novel-saved">✅ 已儲存</span>
-      </div>
-    </div>
-
-    <div class="data-header">
-      <div class="info-bar" id="novel-info">尚未載入資料</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <label class="toggle-expired-wrap"><input type="checkbox" id="novel-show-expired" onchange="renderData('novel')"/> 顯示已逾期月份</label>
-        <input id="search-2" placeholder="🔍 搜尋作品、作者…" oninput="renderData('novel')"/>
-        <button class="btn-load" onclick="loadSheetData('novel')">🔄 載入資料</button>
-      </div>
-    </div>
+    <div class="empty">資料將與漫畫分頁同步載入</div>
     <div id="novel-list"></div>
   </div>
 
-  <!-- 管理設定分頁 -->
   <div id="tab-admin" class="tab-content">
     <div class="settings-panel">
-      <h3>🔐 白名單管理（可使用此工具的 Google 信箱）</h3>
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <input type="email" id="wl-input" placeholder="輸入 Google 信箱" style="flex:1;border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-size:13px;outline:none;"/>
-        <button class="btn-save" onclick="addWhitelist()">新增</button>
-      </div>
+      <h3>🔐 白名單管理</h3>
+      <input type="email" id="wl-input" placeholder="輸入 Email"/><button onclick="addWhitelist()">新增</button>
       <div id="wl-list"></div>
-      <div style="margin-top:12px;">
-        <button class="btn-save" onclick="saveWhitelist()">💾 儲存白名單</button>
-        <span class="saved-badge" id="wl-saved">✅ 已儲存</span>
-      </div>
-    </div>
-    <div class="settings-panel" style="margin-top:0;">
-      <h3>ℹ️ 關於自動寄信（Apps Script）</h3>
-      <p style="font-size:13px;color:#555;line-height:1.8;">
-        每月 20 號自動寄出下個月到期作品的提醒信，需另外設定 Google Apps Script。<br>
-        設定完成後會自動讀取上方的通知設定（收件人、標題、前言）。<br>
-        如需設定 Apps Script，請聯絡系統管理員。
-      </p>
     </div>
   </div>
 </div>
 
 <script>
 const CLIENT_ID = "929637642575-ej2th0o6r3r6sf9t6uedmrrnign77i2i.apps.googleusercontent.com";
-function getSheetId(url) {
-  if (!url) return "";
-  const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-  return m ? m[1] : url.trim();
-}
-const FIELDS = ["狀態","平台ID","作品","作者","上架設定","下架設定"];
-const STATUS_INFO = {
-  overdue:  {label:"已逾期", color:"#ff4444"},
-  today:    {label:"今天",   color:"#ff8800"},
-  soon:     {label:"即將到期",color:"#f0b400"},
-  upcoming: {label:"尚早",   color:"#22aa77"},
-};
+const ID1 = '1Mu6EYvX-6pwEkzPRKRT0KUH6X3r9NwtS1U3pZEHUVQ8';
+const ID2 = '1OIPrEYMPXqBTRxGLRw0q338sWXjmJnHVLsqZQk5ZIMk';
+const FIELDS = ["狀態","作品","作者","下架設定"];
 
 let accessToken = null;
-let currentUser = null;
-let sheetData = { manga: [], novel: [] };
-let collapseState = { manga: {}, novel: {} };
-let settings = {
-  manga: { emails: [], subject: "", body: "", sheetUrl: "" },
-  novel: { emails: [], subject: "", body: "", sheetUrl: "" },
-  whitelist: []
-};
+let settings = { whitelist: [] };
+let sheetData = { manga: [] };
 
-// ── 載入本地儲存 ──
-function loadLocalSettings() {
-  const saved = localStorage.getItem("toB_settings");
-  if (saved) {
-    try { settings = JSON.parse(saved); } catch(e) {}
-  }
-  renderEmailTags("manga");
-  renderEmailTags("novel");
-  document.getElementById("manga-email-subject").value = settings.manga.subject || "";
-  document.getElementById("manga-email-body").value = settings.manga.body || "";
-  document.getElementById("novel-email-subject").value = settings.novel.subject || "";
-  document.getElementById("novel-email-body").value = settings.novel.body || "";
-  document.getElementById("manga-sheet-url").value = settings.manga.sheetUrl || "";
-  document.getElementById("novel-sheet-url").value = settings.novel.sheetUrl || "";
-  renderWhitelist();
+function switchMainTab(tab) {
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+  document.querySelectorAll(".main-tab").forEach(b => b.classList.toggle("active", b.innerText.includes(tab === 'manga' ? '漫畫' : tab === 'novel' ? '小說' : '管理')));
 }
 
-function saveLocalSettings() {
-  localStorage.setItem("toB_settings", JSON.stringify(settings));
-}
-
-// ── Google 登入 ──
 function initGoogle() {
   google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
@@ -307,269 +124,58 @@ function initGoogle() {
 
 async function handleToken(resp) {
   accessToken = resp.access_token;
-  const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-    headers: { Authorization: `Bearer ${accessToken}` }
-  });
-  const user = await res.json();
-  currentUser = user;
-
-  // 白名單驗證
-  const wl = settings.whitelist.map(e => e.toLowerCase());
-  if (wl.length > 0 && !wl.includes(user.email.toLowerCase())) {
-    document.getElementById("login-screen").style.display = "none";
-    document.getElementById("access-denied").style.display = "block";
-    return;
-  }
-
-  // 登入成功
+  const userRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", { headers: { Authorization: `Bearer ${accessToken}` } });
+  const user = await userRes.json();
+  
   document.getElementById("login-screen").style.display = "none";
-  document.getElementById("access-denied").style.display = "none";
   document.getElementById("main-app").style.display = "block";
-  document.getElementById("google-btn").style.display = "none";
-  const ui = document.getElementById("user-info");
-  ui.style.display = "flex";
+  document.getElementById("user-info").style.display = "flex";
   document.getElementById("user-avatar").src = user.picture;
   document.getElementById("user-name").textContent = user.name;
 }
 
+async function loadAllData() {
+  if (!accessToken) return alert("請先登入");
+  document.getElementById("manga-info").innerText = "載入中...";
+  
+  try {
+    const fetchSheet = async (id) => {
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values/Sheet1!A1:Z100`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      return await res.json();
+    };
+
+    const [d1, d2] = await Promise.all([fetchSheet(ID1), fetchSheet(ID2)]);
+    const combined = [...(d1.values || []), ...(d2.values || []).slice(1)];
+    renderTable(combined);
+    document.getElementById("manga-info").innerText = `載入成功，共 ${combined.length} 筆`;
+  } catch (e) {
+    alert("載入失敗，請確認是否勾選權限");
+  }
+}
+
+function renderTable(rows) {
+  const container = document.getElementById("manga-list");
+  if (!rows || rows.length < 2) return container.innerHTML = "無資料";
+  
+  let html = "<table><thead><tr>";
+  rows[0].slice(0, 5).forEach(h => html += `<th>${h}</th>`);
+  html += "</tr></thead><tbody>";
+  
+  rows.slice(1).forEach(row => {
+    html += "<tr>";
+    row.slice(0, 5).forEach(cell => html += `<td>${cell || '-'}</td>`);
+    html += "</tr>";
+  });
+  
+  html += "</tbody></table>";
+  container.innerHTML = html;
+}
+
 document.getElementById("google-btn").onclick = initGoogle;
 document.getElementById("google-btn-2").onclick = initGoogle;
-document.getElementById("btn-logout").onclick = logout;
-document.getElementById("btn-logout-denied").onclick = logout;
-function logout() {
-  accessToken = null; currentUser = null;
-  document.getElementById("main-app").style.display = "none";
-  document.getElementById("access-denied").style.display = "none";
-  document.getElementById("login-screen").style.display = "block";
-  document.getElementById("google-btn").style.display = "flex";
-  document.getElementById("user-info").style.display = "none";
-}
-
-// ── 分頁切換 ──
-function switchMainTab(tab) {
-  document.querySelectorAll(".main-tab").forEach((b,i) => b.classList.toggle("active", ["manga","novel","admin"][i] === tab));
-  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-  document.getElementById("tab-" + tab).classList.add("active");
-}
-
-// ── 設定儲存 ──
-function saveSettings(type) {
-  settings[type].subject = document.getElementById(`${type}-email-subject`).value;
-  settings[type].body = document.getElementById(`${type}-email-body`).value;
-  settings[type].sheetUrl = document.getElementById(`${type}-sheet-url`).value.trim();
-  saveLocalSettings();
-  const badge = document.getElementById(`${type}-saved`);
-  badge.style.display = "inline";
-  setTimeout(() => badge.style.display = "none", 2000);
-}
-
-// ── Email 管理 ──
-function addEmail(type) {
-  const input = document.getElementById(`${type}-email-input`);
-  const val = input.value.trim().toLowerCase();
-  if (!val || !val.includes("@")) return;
-  if (!settings[type].emails.includes(val)) {
-    settings[type].emails.push(val);
-    renderEmailTags(type);
-    saveLocalSettings();
-  }
-  input.value = "";
-}
-document.getElementById("manga-email-input").onkeydown = e => { if (e.key === "Enter") addEmail("manga"); };
-document.getElementById("novel-email-input").onkeydown = e => { if (e.key === "Enter") addEmail("novel"); };
-
-function removeEmail(type, email) {
-  settings[type].emails = settings[type].emails.filter(e => e !== email);
-  renderEmailTags(type);
-  saveLocalSettings();
-}
-
-function renderEmailTags(type) {
-  const wrap = document.getElementById(`${type}-email-tags`);
-  wrap.innerHTML = settings[type].emails.map(e =>
-    `<div class="email-tag">${e}<span class="remove" onclick="removeEmail('${type}','${e}')">×</span></div>`
-  ).join("");
-}
-
-// ── 白名單 ──
-function addWhitelist() {
-  const input = document.getElementById("wl-input");
-  const val = input.value.trim().toLowerCase();
-  if (!val || !val.includes("@")) return;
-  if (!settings.whitelist.includes(val)) {
-    settings.whitelist.push(val);
-    renderWhitelist();
-  }
-  input.value = "";
-}
-document.getElementById("wl-input").onkeydown = e => { if (e.key === "Enter") addWhitelist(); };
-
-function removeWhitelist(email) {
-  settings.whitelist = settings.whitelist.filter(e => e !== email);
-  renderWhitelist();
-}
-
-function renderWhitelist() {
-  const list = document.getElementById("wl-list");
-  if (settings.whitelist.length === 0) {
-    list.innerHTML = "<div style='font-size:13px;color:#aaa;padding:8px 0'>尚未設定白名單（空白表示所有人都可登入）</div>";
-    return;
-  }
-  list.innerHTML = settings.whitelist.map(e =>
-    `<div class="whitelist-item">${e}<button class="remove-wl" onclick="removeWhitelist('${e}')">×</button></div>`
-  ).join("");
-}
-
-function saveWhitelist() {
-  saveLocalSettings();
-  const badge = document.getElementById("wl-saved");
-  badge.style.display = "inline";
-  setTimeout(() => badge.style.display = "none", 2000);
-}
-
-// ── 讀取 Google Sheet ──
-async function loadSheetData(type) {
-  if (!accessToken) { alert("請先登入！"); return; }
-  const listEl = document.getElementById(`${type}-list`);
-  listEl.innerHTML = "<div class='status-loading'>⏳ 載入中…</div>";
-  document.getElementById(`${type}-info`).textContent = "載入中…";
-
-  try {
-    const id = getSheetId(settings[type].sheetUrl);
-  if (!id) { listEl.innerHTML = "<div class=\'empty\'>⚠️ 請先在「管理設定」填入 Google Sheet 網址</div>"; document.getElementById(`${type}-info`).textContent = "未設定網址"; return; }
-    const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}`, {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
-    const meta = await metaRes.json();
-    if (!meta.sheets) throw new Error("無法讀取試算表，請確認權限");
-    const sheetNames = meta.sheets.map(s => s.properties.title);
-
-    sheetData[type] = [];
-    for (const name of sheetNames) {
-      const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${encodeURIComponent(name)}!A1:Z1000`,
-        { headers: { Authorization: `Bearer ${accessToken}` }}
-      );
-      const data = await res.json();
-      if (!data.values || data.values.length < 2) continue;
-      const headers = data.values[0];
-      const ci = headers.indexOf("下架設定");
-      if (ci === -1) continue;
-
-      const fieldIdx = {};
-      FIELDS.forEach(f => { fieldIdx[f] = headers.indexOf(f); });
-
-      data.values.slice(1).forEach((row, ri) => {
-        if (!row[ci]) return;
-        const d = new Date(row[ci]);
-        if (isNaN(d)) return;
-        const diff = getDiff(d);
-        const status = diff < 0 ? "overdue" : diff === 0 ? "today" : diff <= 7 ? "soon" : "upcoming";
-        const fields = {};
-        FIELDS.forEach(f => {
-          const idx = fieldIdx[f];
-          fields[f] = idx !== -1 && row[idx] != null ? String(row[idx]) : "-";
-        });
-        fields["下架設定"] = formatDate(d);
-        if (fieldIdx["上架設定"] !== -1 && row[fieldIdx["上架設定"]]) {
-          const ud = new Date(row[fieldIdx["上架設定"]]);
-          fields["上架設定"] = isNaN(ud) ? row[fieldIdx["上架設定"]] : formatDate(ud);
-        }
-        sheetData[type].push({ sheet: name, date: d, diff, status, fields, rowIndex: ri + 2 });
-      });
-    }
-
-    sheetData[type].sort((a, b) => a.date - b.date);
-    document.getElementById(`${type}-info`).textContent =
-      `共 ${sheetData[type].length} 筆資料　·　最後更新：${new Date().toLocaleTimeString("zh-TW")}`;
-    collapseState[type] = {};
-    renderData(type);
-  } catch(err) {
-    listEl.innerHTML = `<div class='empty'>❌ 載入失敗：${err.message}</div>`;
-    document.getElementById(`${type}-info`).textContent = "載入失敗";
-  }
-}
-
-function getDiff(date) {
-  const today = new Date(); today.setHours(0,0,0,0);
-  const d = new Date(date); d.setHours(0,0,0,0);
-  return Math.round((d - today) / 86400000);
-}
-
-function formatDate(d) {
-  if (!d || isNaN(d)) return "-";
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const day = String(d.getDate()).padStart(2,"0");
-  return `${y}年${m}月${day}日`;
-}
-
-// ── 渲染資料 ──
-function renderData(type) {
-  const search = (document.getElementById(`search-${type === "manga" ? 1 : 2}`).value || "").toLowerCase();
-  const showExpired = document.getElementById(`${type}-show-expired`).checked;
-  const container = document.getElementById(`${type}-list`);
-
-  const filtered = sheetData[type].filter(r => {
-    return FIELDS.some(f => (r.fields[f] || "").toLowerCase().includes(search)) ||
-           r.sheet.toLowerCase().includes(search);
-  });
-
-  const groups = {};
-  filtered.forEach(item => {
-    const key = `${item.date.getFullYear()}年${String(item.date.getMonth()+1).padStart(2,"0")}月`;
-    if (!groups[key]) groups[key] = { items: [], allExpired: true };
-    groups[key].items.push(item);
-    if (item.diff >= 0) groups[key].allExpired = false;
-  });
-
-  container.innerHTML = "";
-  let hasVisible = false;
-
-  Object.keys(groups).sort().forEach(month => {
-    const { items, allExpired } = groups[month];
-    if (allExpired && !showExpired) return;
-    hasVisible = true;
-
-    if (collapseState[type][month] === undefined) {
-      collapseState[type][month] = allExpired;
-    }
-    const collapsed = collapseState[type][month];
-
-    const header = document.createElement("div");
-    header.className = "month-group-header" + (allExpired ? " expired" : "") + (collapsed ? " collapsed" : "");
-    header.innerHTML = `<div class="left"><span class="arrow">▼</span><span>📅 ${month}${allExpired ? "　（已逾期）" : ""}</span></div><span class="count-badge">共 ${items.length} 筆</span>`;
-    header.onclick = () => { collapseState[type][month] = !collapseState[type][month]; renderData(type); };
-    container.appendChild(header);
-
-    const wrap = document.createElement("div");
-    wrap.className = "month-table-wrap" + (collapsed ? " hidden" : "");
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>分頁</th>${FIELDS.map(f => `<th>${f}</th>`).join("")}</tr></thead>`;
-    const tbody = document.createElement("tbody");
-    items.forEach(r => {
-      const info = STATUS_INFO[r.status];
-      const tr = document.createElement("tr");
-      const cells = FIELDS.map(f => {
-        if (f === "狀態") return `<td class="status-cell" style="color:${info.color}">${r.fields[f] !== "-" ? r.fields[f] : info.label}</td>`;
-        if (f === "上架設定" || f === "下架設定") return `<td class="date-cell">${r.fields[f]}</td>`;
-        return `<td>${r.fields[f]}</td>`;
-      }).join("");
-      tr.innerHTML = `<td style="font-size:12px;color:#aaa;font-family:monospace">${r.sheet}</td>${cells}`;
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    wrap.appendChild(table);
-    container.appendChild(wrap);
-  });
-
-  if (!hasVisible) {
-    container.innerHTML = "<div class='empty'>找不到符合的資料</div>";
-  }
-}
-
-// ── 初始化 ──
-loadLocalSettings();
+document.getElementById("btn-logout").onclick = () => location.reload();
 </script>
 </body>
 </html>
